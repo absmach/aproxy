@@ -1,4 +1,4 @@
-module github.com/absmach/mproxy
+module github.com/absmach/aproxy
 
 go 1.21.0
 

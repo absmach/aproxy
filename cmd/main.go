@@ -9,9 +9,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/absmach/mproxy/auth"
-	thingsclient "github.com/absmach/mproxy/internal/clients/grpc/things"
-	mproxy "github.com/absmach/mproxy/mqtt"
+	"github.com/absmach/aproxy/auth"
+	thingsclient "github.com/absmach/aproxy/internal/clients/grpc/things"
+	mproxy "github.com/absmach/aproxy/mqtt"
 	"github.com/caarlos0/env/v9"
 	"github.com/cenkalti/backoff/v4"
 	chclient "github.com/mainflux/callhome/pkg/client"

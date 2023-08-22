@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/absmach/mproxy/auth"
+	"github.com/absmach/aproxy/auth"
 	"github.com/mainflux/mainflux/logger"
 	"github.com/mainflux/mainflux/pkg/errors"
 	"github.com/mainflux/mainflux/pkg/messaging"
