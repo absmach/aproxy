@@ -33,3 +33,5 @@ services:
       MF_SEND_TELEMETRY: ${MF_SEND_TELEMETRY}
     networks:
       - mainflux-base-net
+    volumes:
+      - ../configs/config.toml:/config.toml

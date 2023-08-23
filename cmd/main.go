@@ -30,17 +30,14 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-const (
-	svcName     = "mqtt"
-	envPrefixES = "MF_MQTT_ADAPTER_ES_"
-)
+const svcName = "mqtt"
 
 type MQTTAdapterConfig struct {
-	MQTTPort              string        `toml:"PORT"              env:"MF_MQTT_ADAPTER_MQTT_PORT"                envDefault:"1883"`
-	MQTTTargetHost        string        `toml:"TARGET_HOST"       env:"MF_MQTT_ADAPTER_MQTT_TARGET_HOST"         envDefault:"localhost"`
-	MQTTTargetPort        string        `toml:"TARGET_PORT"       env:"MF_MQTT_ADAPTER_MQTT_TARGET_PORT"         envDefault:"1883"`
-	MQTTForwarderTimeout  time.Duration `toml:"FORWARDER_TIMEOUT" env:"MF_MQTT_ADAPTER_FORWARDER_TIMEOUT"        envDefault:"30s"`
-	MQTTTargetHealthCheck string        `toml:"HEALTH_CHECK"      env:"MF_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK" envDefault:""`
+	MQTTPort              string   `toml:"PORT"              env:"MF_MQTT_ADAPTER_MQTT_PORT"                envDefault:"1883"`
+	MQTTTargetHost        string   `toml:"TARGET_HOST"       env:"MF_MQTT_ADAPTER_MQTT_TARGET_HOST"         envDefault:"localhost"`
+	MQTTTargetPort        string   `toml:"TARGET_PORT"       env:"MF_MQTT_ADAPTER_MQTT_TARGET_PORT"         envDefault:"1883"`
+	MQTTForwarderTimeout  Duration `toml:"FORWARDER_TIMEOUT" env:"MF_MQTT_ADAPTER_FORWARDER_TIMEOUT"        envDefault:"30s"`
+	MQTTTargetHealthCheck string   `toml:"HEALTH_CHECK"      env:"MF_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK" envDefault:""`
 }
 
 type HTTPAdapterConfig struct {
@@ -63,7 +60,18 @@ type config struct {
 	MQTTAdapter MQTTAdapterConfig `toml:"MQTTAdapter"`
 	HTTPAdapter HTTPAdapterConfig `toml:"HTTPAdapter"`
 	General     GeneralConfig     `toml:"General"`
-	ConfigFile  string            `toml:"-" env:"MF_MQTT_ADAPTER_CONFIG_FILE" envDefault:""`
+	ConfigFile  string            `toml:"-" env:"MF_MQTT_ADAPTER_CONFIG_FILE" envDefault:"config.toml"`
+}
+
+type Duration time.Duration
+
+func (d *Duration) UnmarshalText(b []byte) error {
+	x, err := time.ParseDuration(string(b))
+	if err != nil {
+		return err
+	}
+	*d = Duration(x)
+	return nil
 }
 
 func main() {
@@ -118,7 +126,7 @@ func main() {
 	}
 	defer nps.Close()
 
-	mpub, err := mqttpub.NewPublisher(fmt.Sprintf("%s:%s", cfg.MQTTAdapter.MQTTTargetHost, cfg.MQTTAdapter.MQTTTargetPort), cfg.MQTTAdapter.MQTTForwarderTimeout)
+	mpub, err := mqttpub.NewPublisher(fmt.Sprintf("%s:%s", cfg.MQTTAdapter.MQTTTargetHost, cfg.MQTTAdapter.MQTTTargetPort), time.Duration(cfg.MQTTAdapter.MQTTForwarderTimeout))
 	if err != nil {
 		logger.Error(fmt.Sprintf("failed to create MQTT publisher: %s", err))
 		exitCode = 1
