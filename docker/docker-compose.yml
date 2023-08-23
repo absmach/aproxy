@@ -3,15 +3,12 @@ version: "3.7"
 networks:
   mainflux-base-net:
     driver: bridge
+    external: true
 
 services:
   mqtt-adapter:
     image: mainflux/mqtt:${MF_RELEASE_TAG}
     container_name: mainflux-mqtt
-    depends_on:
-      - vernemq
-      - things
-      - broker
     restart: on-failure
     environment:
       MF_MQTT_ADAPTER_LOG_LEVEL: ${MF_MQTT_ADAPTER_LOG_LEVEL}

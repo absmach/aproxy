@@ -65,5 +65,3 @@ require (
 )
 
 replace github.com/mainflux/mainflux => github.com/mainflux/mainflux v0.0.0-20230811131717-9dbe87f03a1a
-
-replace github.com/mainflux/mproxy => github.com/sammyoina/mproxy v0.0.0-20230816070248-085e00a368a8
