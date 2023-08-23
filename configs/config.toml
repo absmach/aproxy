@@ -1,0 +1,20 @@
+[MQTTAdapter]
+  PORT = "1883"
+  TARGET_HOST = "mqtt.example.com"
+  TARGET_PORT = "1883"
+  FORWARDER_TIMEOUT = "45s"
+  HEALTH_CHECK = "/health"
+
+[HTTPAdapter]
+  PORT = "8080"
+  TARGET_HOST = "ws.example.com"
+  TARGET_PORT = "8080"
+  TARGET_PATH = "/mqtt"
+
+[General]
+  INSTANCE = "example-instance"
+  JAEGER_URL = "http://jaeger.example.com:14268/api/traces"
+  BROKER_URL = "nats://nats.example.com:4222"
+  SEND_TELEMETRY = true
+  INSTANCE_ID = "unique-instance-id"
+  LOG_LEVEL = "debug"

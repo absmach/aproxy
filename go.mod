@@ -47,6 +47,7 @@ require (
 	github.com/nats-io/nats.go v1.27.1 // indirect
 	github.com/nats-io/nkeys v0.4.4 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/pelletier/go-toml/v2 v2.0.9
 	github.com/rabbitmq/amqp091-go v1.8.1 // indirect
 	github.com/rubenv/sql-migrate v1.5.1 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
