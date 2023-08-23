@@ -7,7 +7,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/mainflux/callhome v0.0.0-20230626140149-b03b1f4c46f2
 	github.com/mainflux/mainflux v0.12.0
-	github.com/mainflux/mproxy v0.3.0
+	github.com/mainflux/mproxy v0.3.1-0.20230822124450-4b4dfe600cc2
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.42.0
 	golang.org/x/sync v0.3.0
 	google.golang.org/grpc v1.56.1
@@ -64,4 +64,4 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 )
 
-replace github.com/mainflux/mainflux => github.com/mainflux/mainflux v0.0.0-20230811131717-9dbe87f03a1a
+replace github.com/mainflux/mainflux => github.com/mainflux/mainflux v0.0.0-20230823124803-822a607e31fe

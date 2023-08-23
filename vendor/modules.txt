@@ -155,7 +155,7 @@ github.com/lestrrat-go/option
 # github.com/mainflux/callhome v0.0.0-20230626140149-b03b1f4c46f2
 ## explicit; go 1.20
 github.com/mainflux/callhome/pkg/client
-# github.com/mainflux/mainflux v0.12.0 => github.com/mainflux/mainflux v0.0.0-20230811131717-9dbe87f03a1a
+# github.com/mainflux/mainflux v0.12.0 => github.com/mainflux/mainflux v0.0.0-20230823124803-822a607e31fe
 ## explicit; go 1.20
 github.com/mainflux/mainflux
 github.com/mainflux/mainflux/internal/apiutil
@@ -182,7 +182,7 @@ github.com/mainflux/mainflux/things/policies
 github.com/mainflux/mainflux/things/policies/api/grpc
 github.com/mainflux/mainflux/users/jwt
 github.com/mainflux/mainflux/users/policies
-# github.com/mainflux/mproxy v0.3.0
+# github.com/mainflux/mproxy v0.3.1-0.20230822124450-4b4dfe600cc2
 ## explicit; go 1.19
 github.com/mainflux/mproxy/pkg/logger
 github.com/mainflux/mproxy/pkg/mqtt
@@ -386,4 +386,4 @@ google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
-# github.com/mainflux/mainflux => github.com/mainflux/mainflux v0.0.0-20230811131717-9dbe87f03a1a
+# github.com/mainflux/mainflux => github.com/mainflux/mainflux v0.0.0-20230823124803-822a607e31fe

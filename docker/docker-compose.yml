@@ -2,12 +2,10 @@ version: "3.7"
 
 networks:
   mainflux-base-net:
-    driver: bridge
-    external: true
 
 services:
   mqtt-adapter:
-    image: mainflux/mqtt:${MF_RELEASE_TAG}
+    image: amdm/aproxy:${MF_RELEASE_TAG}
     container_name: mainflux-mqtt
     restart: on-failure
     environment:
@@ -35,13 +33,3 @@ services:
       MF_SEND_TELEMETRY: ${MF_SEND_TELEMETRY}
     networks:
       - mainflux-base-net
-  broker:
-    extends:
-      file: brokers/nats.yml
-      service: broker
-    container_name: mainflux-broker
-    restart: on-failure
-    networks:
-      - mainflux-base-net
-    ports:
-      - 4222:4222
