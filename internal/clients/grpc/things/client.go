@@ -4,14 +4,14 @@
 package things
 
 import (
-	grpcclient "github.com/absmach/mproxy/internal/clients/grpc"
+	grpcclient "github.com/absmach/aproxy/internal/clients/grpc"
 	"github.com/caarlos0/env/v9"
 	"github.com/mainflux/mainflux/pkg/errors"
 	"github.com/mainflux/mainflux/things/policies"
 	thingsapi "github.com/mainflux/mainflux/things/policies/api/grpc"
 )
 
-const envThingsAuthGrpcPrefix = "MF_THINGS_AUTH_GRPC_"
+const envThingsAuthGrpcPrefix = "APROXY_THINGS_AUTH_GRPC_"
 
 var errGrpcConfig = errors.New("failed to load grpc configuration")
 
