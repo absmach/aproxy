@@ -14,6 +14,5 @@
 [General]
   INSTANCE = ""
   JAEGER_URL = "http://jaeger:14268/api/traces"
-  SEND_TELEMETRY = false
   INSTANCE_ID = ""
   LOG_LEVEL = "debug"
