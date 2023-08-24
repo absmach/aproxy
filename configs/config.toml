@@ -14,7 +14,6 @@
 [General]
   INSTANCE = ""
   JAEGER_URL = "http://jaeger:14268/api/traces"
-  BROKER_URL = "nats://broker:4222"
   SEND_TELEMETRY = false
   INSTANCE_ID = ""
   LOG_LEVEL = "debug"

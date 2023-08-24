@@ -17,10 +17,7 @@ import (
 	chclient "github.com/mainflux/callhome/pkg/client"
 	"github.com/mainflux/mainflux"
 	mflog "github.com/mainflux/mainflux/logger"
-	"github.com/mainflux/mainflux/mqtt"
 	"github.com/mainflux/mainflux/pkg/errors"
-	"github.com/mainflux/mainflux/pkg/messaging"
-	"github.com/mainflux/mainflux/pkg/messaging/brokers"
 	mqttpub "github.com/mainflux/mainflux/pkg/messaging/mqtt"
 	"github.com/mainflux/mainflux/pkg/uuid"
 	mp "github.com/mainflux/mproxy/pkg/mqtt"
@@ -33,34 +30,33 @@ import (
 const svcName = "mqtt"
 
 type MQTTAdapterConfig struct {
-	MQTTPort              string   `toml:"PORT"              env:"AMDM_MQTT_ADAPTER_MQTT_PORT"                envDefault:"1883"`
-	MQTTTargetHost        string   `toml:"TARGET_HOST"       env:"AMDM_MQTT_ADAPTER_MQTT_TARGET_HOST"         envDefault:"localhost"`
-	MQTTTargetPort        string   `toml:"TARGET_PORT"       env:"AMDM_MQTT_ADAPTER_MQTT_TARGET_PORT"         envDefault:"1883"`
-	MQTTForwarderTimeout  Duration `toml:"FORWARDER_TIMEOUT" env:"AMDM_MQTT_ADAPTER_FORWARDER_TIMEOUT"        envDefault:"30s"`
-	MQTTTargetHealthCheck string   `toml:"HEALTH_CHECK"      env:"AMDM_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK" envDefault:""`
+	MQTTPort              string   `toml:"PORT"              env:"APROXY_MQTT_ADAPTER_MQTT_PORT"                envDefault:"1883"`
+	MQTTTargetHost        string   `toml:"TARGET_HOST"       env:"APROXY_MQTT_ADAPTER_MQTT_TARGET_HOST"         envDefault:"localhost"`
+	MQTTTargetPort        string   `toml:"TARGET_PORT"       env:"APROXY_MQTT_ADAPTER_MQTT_TARGET_PORT"         envDefault:"1883"`
+	MQTTForwarderTimeout  Duration `toml:"FORWARDER_TIMEOUT" env:"APROXY_MQTT_ADAPTER_FORWARDER_TIMEOUT"        envDefault:"30s"`
+	MQTTTargetHealthCheck string   `toml:"HEALTH_CHECK"      env:"APROXY_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK" envDefault:""`
 }
 
 type HTTPAdapterConfig struct {
-	HTTPPort       string `toml:"PORT"        env:"AMDM_MQTT_ADAPTER_WS_PORT"        envDefault:"8080"`
-	HTTPTargetHost string `toml:"TARGET_HOST" env:"AMDM_MQTT_ADAPTER_WS_TARGET_HOST" envDefault:"localhost"`
-	HTTPTargetPort string `toml:"TARGET_PORT" env:"AMDM_MQTT_ADAPTER_WS_TARGET_PORT" envDefault:"8080"`
-	HTTPTargetPath string `toml:"TARGET_PATH" env:"AMDM_MQTT_ADAPTER_WS_TARGET_PATH" envDefault:"/mqtt"`
+	HTTPPort       string `toml:"PORT"        env:"APROXY_MQTT_ADAPTER_WS_PORT"        envDefault:"8080"`
+	HTTPTargetHost string `toml:"TARGET_HOST" env:"APROXY_MQTT_ADAPTER_WS_TARGET_HOST" envDefault:"localhost"`
+	HTTPTargetPort string `toml:"TARGET_PORT" env:"APROXY_MQTT_ADAPTER_WS_TARGET_PORT" envDefault:"8080"`
+	HTTPTargetPath string `toml:"TARGET_PATH" env:"APROXY_MQTT_ADAPTER_WS_TARGET_PATH" envDefault:"/mqtt"`
 }
 
 type GeneralConfig struct {
-	LogLevel      string `toml:"LOG_LEVEL"      env:"AMDM_MQTT_ADAPTER_LOG_LEVEL"   envDefault:"info"`
-	Instance      string `toml:"INSTANCE"       env:"AMDM_MQTT_ADAPTER_INSTANCE"    envDefault:""`
-	JaegerURL     string `toml:"JAEGER_URL"     env:"AMDM_JAEGER_URL"               envDefault:"http://jaeger:14268/api/traces"`
-	BrokerURL     string `toml:"BROKER_URL"     env:"AMDM_BROKER_URL"               envDefault:"nats://localhost:4222"`
-	SendTelemetry bool   `toml:"SEND_TELEMETRY" env:"AMDM_SEND_TELEMETRY"           envDefault:"true"`
-	InstanceID    string `toml:"INSTANCE_ID"    env:"AMDM_MQTT_ADAPTER_INSTANCE_ID" envDefault:""`
+	LogLevel      string `toml:"LOG_LEVEL"      env:"APROXY_MQTT_ADAPTER_LOG_LEVEL"   envDefault:"info"`
+	Instance      string `toml:"INSTANCE"       env:"APROXY_MQTT_ADAPTER_INSTANCE"    envDefault:""`
+	JaegerURL     string `toml:"JAEGER_URL"     env:"APROXY_JAEGER_URL"               envDefault:"http://jaeger:14268/api/traces"`
+	SendTelemetry bool   `toml:"SEND_TELEMETRY" env:"APROXY_SEND_TELEMETRY"           envDefault:"true"`
+	InstanceID    string `toml:"INSTANCE_ID"    env:"APROXY_MQTT_ADAPTER_INSTANCE_ID" envDefault:""`
 }
 
 type config struct {
 	MQTTAdapter MQTTAdapterConfig `toml:"MQTTAdapter"`
 	HTTPAdapter HTTPAdapterConfig `toml:"HTTPAdapter"`
 	General     GeneralConfig     `toml:"General"`
-	ConfigFile  string            `toml:"-" env:"AMDM_MQTT_ADAPTER_CONFIG_FILE" envDefault:"config.toml"`
+	ConfigFile  string            `toml:"-" env:"APROXY_MQTT_ADAPTER_CONFIG_FILE" envDefault:"config.toml"`
 }
 
 type Duration time.Duration
@@ -118,13 +114,13 @@ func main() {
 		}
 	}
 
-	nps, err := brokers.NewPubSub(cfg.General.BrokerURL, "mqtt", logger)
+	//nps, err := brokers.NewPubSub(cfg.General.BrokerURL, "mqtt", logger)
 	if err != nil {
 		logger.Error(fmt.Sprintf("failed to connect to message broker: %s", err))
 		exitCode = 1
 		return
 	}
-	defer nps.Close()
+	//defer nps.Close()
 
 	mpub, err := mqttpub.NewPublisher(fmt.Sprintf("%s:%s", cfg.MQTTAdapter.MQTTTargetHost, cfg.MQTTAdapter.MQTTTargetPort), time.Duration(cfg.MQTTAdapter.MQTTForwarderTimeout))
 	if err != nil {
@@ -133,21 +129,6 @@ func main() {
 		return
 	}
 	defer mpub.Close()
-
-	fwd := mqtt.NewForwarder(brokers.SubjectAllChannels, logger)
-	if err := fwd.Forward(ctx, svcName, nps, mpub); err != nil {
-		logger.Error(fmt.Sprintf("failed to forward message broker messages: %s", err))
-		exitCode = 1
-		return
-	}
-
-	np, err := brokers.NewPublisher(cfg.General.BrokerURL)
-	if err != nil {
-		logger.Error(fmt.Sprintf("failed to connect to message broker: %s", err))
-		exitCode = 1
-		return
-	}
-	defer np.Close()
 
 	tc, tcHandler, err := thingsclient.Setup()
 	if err != nil {
@@ -161,7 +142,7 @@ func main() {
 
 	authClient := auth.NewGrpcAuthClient(tc)
 
-	h := mproxy.NewHandler([]messaging.Publisher{np}, logger, authClient)
+	h := mproxy.NewHandler(logger, authClient)
 
 	if cfg.General.SendTelemetry {
 		chc := chclient.New(svcName, mainflux.Version, logger, cancel)

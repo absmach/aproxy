@@ -11,7 +11,7 @@ import (
 	thingsapi "github.com/mainflux/mainflux/things/policies/api/grpc"
 )
 
-const envThingsAuthGrpcPrefix = "AMDM_THINGS_AUTH_GRPC_"
+const envThingsAuthGrpcPrefix = "APROXY_THINGS_AUTH_GRPC_"
 
 var errGrpcConfig = errors.New("failed to load grpc configuration")
 

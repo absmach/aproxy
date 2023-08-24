@@ -9,12 +9,10 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/absmach/aproxy/auth"
 	"github.com/mainflux/mainflux/logger"
 	"github.com/mainflux/mainflux/pkg/errors"
-	"github.com/mainflux/mainflux/pkg/messaging"
 	"github.com/mainflux/mainflux/things/policies"
 	"github.com/mainflux/mproxy/pkg/session"
 )
@@ -55,17 +53,15 @@ var channelRegExp = regexp.MustCompile(`^\/?channels\/([\w\-]+)\/messages(\/[^?]
 
 // Event implements events.Event interface.
 type handler struct {
-	publishers []messaging.Publisher
-	auth       auth.AuthServiceClient
-	logger     logger.Logger
+	auth   auth.AuthServiceClient
+	logger logger.Logger
 }
 
 // NewHandler creates new Handler entity.
-func NewHandler(publishers []messaging.Publisher, logger logger.Logger, auth auth.AuthServiceClient) session.Handler {
+func NewHandler(logger logger.Logger, auth auth.AuthServiceClient) session.Handler {
 	return &handler{
-		logger:     logger,
-		publishers: publishers,
-		auth:       auth,
+		logger: logger,
+		auth:   auth,
 	}
 }
 
@@ -157,7 +153,6 @@ func (h *handler) Publish(ctx context.Context, topic *string, payload *[]byte) e
 		return errors.Wrap(ErrFailedPublish, ErrMalformedTopic)
 	}
 
-	chanID := channelParts[1]
 	subtopic := channelParts[2]
 
 	subtopic, err := parseSubtopic(subtopic)
@@ -165,20 +160,6 @@ func (h *handler) Publish(ctx context.Context, topic *string, payload *[]byte) e
 		return errors.Wrap(ErrFailedParseSubtopic, err)
 	}
 
-	msg := messaging.Message{
-		Protocol:  protocol,
-		Channel:   chanID,
-		Subtopic:  subtopic,
-		Publisher: s.Username,
-		Payload:   *payload,
-		Created:   time.Now().UnixNano(),
-	}
-
-	for _, pub := range h.publishers {
-		if err := pub.Publish(ctx, msg.Channel, &msg); err != nil {
-			return errors.Wrap(ErrFailedPublishToMsgBroker, err)
-		}
-	}
 	return nil
 }
 
