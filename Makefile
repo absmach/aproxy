@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 PROGRAM = aproxy
-MF_DOCKER_IMAGE_NAME_PREFIX ?= amdm
+AMDM_DOCKER_IMAGE_NAME_PREFIX ?= amdm
 SOURCES = $(wildcard *.go) cmd/main.go
 CGO_ENABLED ?= 0
 GOARCH ?= amd64
@@ -23,7 +23,7 @@ define make_docker
 		--build-arg VERSION=$(VERSION) \
 		--build-arg COMMIT=$(COMMIT) \
 		--build-arg TIME=$(TIME) \
-		--tag=$(MF_DOCKER_IMAGE_NAME_PREFIX)/$(PROGRAM) \
+		--tag=$(AMDM_DOCKER_IMAGE_NAME_PREFIX)/$(PROGRAM) \
 		-f docker/Dockerfile .
 endef
 
@@ -31,7 +31,7 @@ define make_docker_dev
 	docker build \
 		--no-cache \
 		--build-arg SVC=$(PROGRAM) \
-		--tag=$(MF_DOCKER_IMAGE_NAME_PREFIX)/$(PROGRAM) \
+		--tag=$(AMDM_DOCKER_IMAGE_NAME_PREFIX)/$(PROGRAM) \
 		-f docker/Dockerfile.dev ./build
 endef
 
@@ -41,7 +41,7 @@ $(PROGRAM): $(SOURCES)
 	-X 'github.com/mainflux/mainflux.BuildTime=$(TIME)' \
 	-X 'github.com/mainflux/mainflux.Version=$(VERSION)' \
 	-X 'github.com/mainflux/mainflux.Commit=$(COMMIT)'" \
-	-o ./build/$(MF_DOCKER_IMAGE_NAME_PREFIX)-$(PROGRAM) cmd/main.go
+	-o ./build/$(AMDM_DOCKER_IMAGE_NAME_PREFIX)-$(PROGRAM) cmd/main.go
 
 clean:
 	rm -rf $(PROGRAM)

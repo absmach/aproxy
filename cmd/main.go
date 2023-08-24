@@ -33,34 +33,34 @@ import (
 const svcName = "mqtt"
 
 type MQTTAdapterConfig struct {
-	MQTTPort              string   `toml:"PORT"              env:"MF_MQTT_ADAPTER_MQTT_PORT"                envDefault:"1883"`
-	MQTTTargetHost        string   `toml:"TARGET_HOST"       env:"MF_MQTT_ADAPTER_MQTT_TARGET_HOST"         envDefault:"localhost"`
-	MQTTTargetPort        string   `toml:"TARGET_PORT"       env:"MF_MQTT_ADAPTER_MQTT_TARGET_PORT"         envDefault:"1883"`
-	MQTTForwarderTimeout  Duration `toml:"FORWARDER_TIMEOUT" env:"MF_MQTT_ADAPTER_FORWARDER_TIMEOUT"        envDefault:"30s"`
-	MQTTTargetHealthCheck string   `toml:"HEALTH_CHECK"      env:"MF_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK" envDefault:""`
+	MQTTPort              string   `toml:"PORT"              env:"AMDM_MQTT_ADAPTER_MQTT_PORT"                envDefault:"1883"`
+	MQTTTargetHost        string   `toml:"TARGET_HOST"       env:"AMDM_MQTT_ADAPTER_MQTT_TARGET_HOST"         envDefault:"localhost"`
+	MQTTTargetPort        string   `toml:"TARGET_PORT"       env:"AMDM_MQTT_ADAPTER_MQTT_TARGET_PORT"         envDefault:"1883"`
+	MQTTForwarderTimeout  Duration `toml:"FORWARDER_TIMEOUT" env:"AMDM_MQTT_ADAPTER_FORWARDER_TIMEOUT"        envDefault:"30s"`
+	MQTTTargetHealthCheck string   `toml:"HEALTH_CHECK"      env:"AMDM_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK" envDefault:""`
 }
 
 type HTTPAdapterConfig struct {
-	HTTPPort       string `toml:"PORT"        env:"MF_MQTT_ADAPTER_WS_PORT"        envDefault:"8080"`
-	HTTPTargetHost string `toml:"TARGET_HOST" env:"MF_MQTT_ADAPTER_WS_TARGET_HOST" envDefault:"localhost"`
-	HTTPTargetPort string `toml:"TARGET_PORT" env:"MF_MQTT_ADAPTER_WS_TARGET_PORT" envDefault:"8080"`
-	HTTPTargetPath string `toml:"TARGET_PATH" env:"MF_MQTT_ADAPTER_WS_TARGET_PATH" envDefault:"/mqtt"`
+	HTTPPort       string `toml:"PORT"        env:"AMDM_MQTT_ADAPTER_WS_PORT"        envDefault:"8080"`
+	HTTPTargetHost string `toml:"TARGET_HOST" env:"AMDM_MQTT_ADAPTER_WS_TARGET_HOST" envDefault:"localhost"`
+	HTTPTargetPort string `toml:"TARGET_PORT" env:"AMDM_MQTT_ADAPTER_WS_TARGET_PORT" envDefault:"8080"`
+	HTTPTargetPath string `toml:"TARGET_PATH" env:"AMDM_MQTT_ADAPTER_WS_TARGET_PATH" envDefault:"/mqtt"`
 }
 
 type GeneralConfig struct {
-	LogLevel      string `toml:"LOG_LEVEL"      env:"MF_MQTT_ADAPTER_LOG_LEVEL"   envDefault:"info"`
-	Instance      string `toml:"INSTANCE"       env:"MF_MQTT_ADAPTER_INSTANCE"    envDefault:""`
-	JaegerURL     string `toml:"JAEGER_URL"     env:"MF_JAEGER_URL"               envDefault:"http://jaeger:14268/api/traces"`
-	BrokerURL     string `toml:"BROKER_URL"     env:"MF_BROKER_URL"               envDefault:"nats://localhost:4222"`
-	SendTelemetry bool   `toml:"SEND_TELEMETRY" env:"MF_SEND_TELEMETRY"           envDefault:"true"`
-	InstanceID    string `toml:"INSTANCE_ID"    env:"MF_MQTT_ADAPTER_INSTANCE_ID" envDefault:""`
+	LogLevel      string `toml:"LOG_LEVEL"      env:"AMDM_MQTT_ADAPTER_LOG_LEVEL"   envDefault:"info"`
+	Instance      string `toml:"INSTANCE"       env:"AMDM_MQTT_ADAPTER_INSTANCE"    envDefault:""`
+	JaegerURL     string `toml:"JAEGER_URL"     env:"AMDM_JAEGER_URL"               envDefault:"http://jaeger:14268/api/traces"`
+	BrokerURL     string `toml:"BROKER_URL"     env:"AMDM_BROKER_URL"               envDefault:"nats://localhost:4222"`
+	SendTelemetry bool   `toml:"SEND_TELEMETRY" env:"AMDM_SEND_TELEMETRY"           envDefault:"true"`
+	InstanceID    string `toml:"INSTANCE_ID"    env:"AMDM_MQTT_ADAPTER_INSTANCE_ID" envDefault:""`
 }
 
 type config struct {
 	MQTTAdapter MQTTAdapterConfig `toml:"MQTTAdapter"`
 	HTTPAdapter HTTPAdapterConfig `toml:"HTTPAdapter"`
 	General     GeneralConfig     `toml:"General"`
-	ConfigFile  string            `toml:"-" env:"MF_MQTT_ADAPTER_CONFIG_FILE" envDefault:"config.toml"`
+	ConfigFile  string            `toml:"-" env:"AMDM_MQTT_ADAPTER_CONFIG_FILE" envDefault:"config.toml"`
 }
 
 type Duration time.Duration
