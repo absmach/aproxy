@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/absmach/aproxy"
 	"github.com/absmach/aproxy/auth"
 	"github.com/absmach/aproxy/internal/config"
 	thingsclient "github.com/absmach/aproxy/internal/grpc/things"
@@ -24,7 +25,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-const svcName = "mqtt"
+const svcName = "aproxy"
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -64,14 +65,6 @@ func main() {
 		}
 	}
 
-	//nps, err := brokers.NewPubSub(cfg.General.BrokerURL, "mqtt", logger)
-	if err != nil {
-		logger.Error(fmt.Sprintf("failed to connect to message broker: %s", err))
-		exitCode = 1
-		return
-	}
-	//defer nps.Close()
-
 	mpub, err := mqttpub.NewPublisher(fmt.Sprintf("%s:%s", cfg.MQTTAdapter.MQTTTargetHost, cfg.MQTTAdapter.MQTTTargetPort), time.Duration(cfg.MQTTAdapter.MQTTForwarderTimeout))
 	if err != nil {
 		logger.Error(fmt.Sprintf("failed to create MQTT publisher: %s", err))
@@ -101,7 +94,7 @@ func main() {
 
 	logger.Info(fmt.Sprintf("Starting MQTT over WS  proxy on port %s", cfg.HTTPAdapter.HTTPPort))
 	g.Go(func() error {
-		return proxyWS(ctx, cfg.HTTPAdapter, logger, h)
+		return proxyWS(ctx, cfg, logger, h)
 	})
 
 	g.Go(func() error {
@@ -136,15 +129,16 @@ func proxyMQTT(ctx context.Context, cfg config.MQTTAdapterConfig, logger mflog.L
 	}
 }
 
-func proxyWS(ctx context.Context, cfg config.HTTPAdapterConfig, logger mflog.Logger, handler session.Handler) error {
-	target := fmt.Sprintf("%s:%s", cfg.HTTPTargetHost, cfg.HTTPTargetPort)
-	wp := websocket.New(target, cfg.HTTPTargetPath, "ws", handler, logger)
+func proxyWS(ctx context.Context, cfg config.Config, logger mflog.Logger, handler session.Handler) error {
+	target := fmt.Sprintf("%s:%s", cfg.HTTPAdapter.HTTPTargetHost, cfg.HTTPAdapter.HTTPTargetPort)
+	wp := websocket.New(target, cfg.HTTPAdapter.HTTPTargetPath, "ws", handler, logger)
 	http.Handle("/mqtt", wp.Handler())
+	http.Handle("/health", aproxy.Health(svcName, cfg.General.InstanceID))
 
 	errCh := make(chan error)
 
 	go func() {
-		errCh <- wp.Listen(cfg.HTTPPort)
+		errCh <- wp.Listen(cfg.HTTPAdapter.HTTPPort)
 	}()
 
 	select {

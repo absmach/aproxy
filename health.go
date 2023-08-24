@@ -1,4 +1,4 @@
-package mainflux
+package aproxy
 
 import (
 	"encoding/json"

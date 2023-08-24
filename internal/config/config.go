@@ -9,6 +9,7 @@ import (
 	"github.com/pelletier/go-toml/v2"
 )
 
+// MQTTAdapterConfig configuration for mqtt proxy.
 type MQTTAdapterConfig struct {
 	MQTTPort              string   `toml:"PORT"              env:"APROXY_MQTT_ADAPTER_MQTT_PORT"                envDefault:"1883"`
 	MQTTTargetHost        string   `toml:"TARGET_HOST"       env:"APROXY_MQTT_ADAPTER_MQTT_TARGET_HOST"         envDefault:"localhost"`
@@ -17,6 +18,7 @@ type MQTTAdapterConfig struct {
 	MQTTTargetHealthCheck string   `toml:"HEALTH_CHECK"      env:"APROXY_MQTT_ADAPTER_MQTT_TARGET_HEALTH_CHECK" envDefault:""`
 }
 
+// HTTPAdapterConfig configuration for ws proxy.
 type HTTPAdapterConfig struct {
 	HTTPPort       string `toml:"PORT"        env:"APROXY_MQTT_ADAPTER_WS_PORT"        envDefault:"8080"`
 	HTTPTargetHost string `toml:"TARGET_HOST" env:"APROXY_MQTT_ADAPTER_WS_TARGET_HOST" envDefault:"localhost"`
@@ -24,6 +26,7 @@ type HTTPAdapterConfig struct {
 	HTTPTargetPath string `toml:"TARGET_PATH" env:"APROXY_MQTT_ADAPTER_WS_TARGET_PATH" envDefault:"/mqtt"`
 }
 
+// GeneralConfig general service configuration.
 type GeneralConfig struct {
 	LogLevel   string `toml:"LOG_LEVEL"   env:"APROXY_MQTT_ADAPTER_LOG_LEVEL"   envDefault:"info"`
 	Instance   string `toml:"INSTANCE"    env:"APROXY_MQTT_ADAPTER_INSTANCE"    envDefault:""`
@@ -31,6 +34,7 @@ type GeneralConfig struct {
 	InstanceID string `toml:"INSTANCE_ID" env:"APROXY_MQTT_ADAPTER_INSTANCE_ID" envDefault:""`
 }
 
+// Config all configuration params for service.
 type Config struct {
 	MQTTAdapter MQTTAdapterConfig `toml:"MQTTAdapter"`
 	HTTPAdapter HTTPAdapterConfig `toml:"HTTPAdapter"`
@@ -38,8 +42,10 @@ type Config struct {
 	ConfigFile  string            `toml:"-" env:"APROXY_MQTT_ADAPTER_CONFIG_FILE" envDefault:"config.toml"`
 }
 
+// Duration time duration.
 type Duration time.Duration
 
+// UnmarshalText custom unmarsher for Duration.
 func (d *Duration) UnmarshalText(b []byte) error {
 	x, err := time.ParseDuration(string(b))
 	if err != nil {
@@ -65,6 +71,7 @@ func parseConfigFile(cfg *Config) error {
 	return nil
 }
 
+// NewConfig creates new configuration from env and config file if provided respectively.
 func NewConfig() (Config, error) {
 	cfg := Config{}
 	if err := env.Parse(&cfg); err != nil {
