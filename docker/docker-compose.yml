@@ -29,7 +29,7 @@ services:
     networks:
       - mainflux-base-net
     volumes:
-      - ../configs/config.toml:/config.toml
+      - ../config.toml:/config.toml
     ports:
       - ${APROXY_MQTT_ADAPTER_WS_TARGET_PORT}:${APROXY_MQTT_ADAPTER_WS_TARGET_PORT}
 
