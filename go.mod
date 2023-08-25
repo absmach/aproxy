@@ -5,7 +5,6 @@ go 1.21.0
 require (
 	github.com/caarlos0/env/v9 v9.0.0
 	github.com/cenkalti/backoff/v4 v4.2.1
-	github.com/mainflux/callhome v0.0.0-20230626140149-b03b1f4c46f2
 	github.com/mainflux/mainflux v0.12.0
 	github.com/mainflux/mproxy v0.3.1-0.20230822124450-4b4dfe600cc2
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.42.0
@@ -14,7 +13,12 @@ require (
 )
 
 require (
-	github.com/caarlos0/env/v7 v7.1.0 // indirect
+	github.com/jackc/pgconn v1.14.0 // indirect
+	github.com/jackc/pgproto3/v2 v2.3.2 // indirect
+)
+
+require (
+	github.com/caarlos0/env/v7 v7.1.0
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/eclipse/paho.mqtt.golang v1.4.2 // indirect
 	github.com/go-gorp/gorp/v3 v3.1.0 // indirect

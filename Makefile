@@ -38,9 +38,9 @@ endef
 $(PROGRAM): $(SOURCES)
 	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) GOARCH=$(GOARCH) GOARM=$(GOARM) \
 	go build -mod=vendor -ldflags "-s -w \
-	-X 'github.com/mainflux/mainflux.BuildTime=$(TIME)' \
-	-X 'github.com/mainflux/mainflux.Version=$(VERSION)' \
-	-X 'github.com/mainflux/mainflux.Commit=$(COMMIT)'" \
+	-X 'github.com/absmach/aproxy.BuildTime=$(TIME)' \
+	-X 'github.com/absmach/aproxy.Version=$(VERSION)' \
+	-X 'github.com/absmach/aproxy.Commit=$(COMMIT)'" \
 	-o ./build/$(APROXY_DOCKER_IMAGE_NAME_PREFIX)-$(PROGRAM) cmd/main.go
 
 clean:

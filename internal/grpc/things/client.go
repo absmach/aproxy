@@ -4,7 +4,7 @@
 package things
 
 import (
-	grpcclient "github.com/absmach/aproxy/internal/clients/grpc"
+	grpcclient "github.com/absmach/aproxy/internal/grpc"
 	"github.com/caarlos0/env/v9"
 	"github.com/mainflux/mainflux/pkg/errors"
 	"github.com/mainflux/mainflux/things/policies"
